@@ -152,14 +152,14 @@ export const loginUser = async (req, res) => {
         { expiresIn: "1d" }
       );
 
-      // this code on chat GPT
+   /*   // this code on chat GPT
       res.cookie("accessToken", accessToken, {
         httpOnly: true, // Prevents JS access
         secure: process.env.NODE_ENV === "production", // Send only over HTTPS in production
         sameSite: "Strict", // Helps prevent CSRF
         maxAge: 24 * 60 * 60 * 1000, // 1 day
       });
-
+*/
       return res.status(200).json({
         success: true,
         message: "Login Successfully",
@@ -167,6 +167,7 @@ export const loginUser = async (req, res) => {
           id: isUser._id,
           username: isUser.username,
           email: isUser.email,
+          accessToken
 
           // refreshToken,
         },

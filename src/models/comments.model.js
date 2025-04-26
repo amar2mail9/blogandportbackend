@@ -21,6 +21,11 @@ const commentSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    status: {
+      type: String,
+      enum: ['private', "public"],
+      default: "private"
+    }
   },
   { timestamps: true }
 );

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import slugify from "slugify";
 
 const blogSchema = new mongoose.Schema(
   {
@@ -55,7 +56,9 @@ const blogSchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: "Category",
       },
-      categoryName: String
+      categoryName: String,
+
+      slug:String
     },
     status: {
       type: String,
