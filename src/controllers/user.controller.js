@@ -134,6 +134,7 @@ export const loginUser = async (req, res) => {
       });
     }
 
+
     const isMatchPassword = await bcrypt.compare(password, isUser.password);
 
     if (!isMatchPassword) {
@@ -141,25 +142,24 @@ export const loginUser = async (req, res) => {
         success: false,
         message: "Invalid Email or Password",
       });
-    } else {
-      const accessToken = await jwt.sign(
-        {
-          id: isUser._id,
-          email: isUser.email,
-          username: isUser.username,
-        },
-        process.env.ACCESS_TOKEN,
-        { expiresIn: "1d" }
-      );
+    } 
 
-   /*   // this code on chat GPT
-      res.cookie("accessToken", accessToken, {
-        httpOnly: true, // Prevents JS access
-        secure: process.env.NODE_ENV === "production", // Send only over HTTPS in production
-        sameSite: "Strict", // Helps prevent CSRF
-        maxAge: 24 * 60 * 60 * 1000, // 1 day
+    if (isUser.role !== "admin") {
+      return res.status(400).json({
+        success: false,
+        message: "User Not Admin",
       });
-*/
+    }
+
+    const accessToken = await jwt.sign(
+      {
+        id: isUser._id,
+        email: isUser.email,
+        username: isUser.username,
+      },
+      process.env.ACCESS_TOKEN,
+      { expiresIn: "1d" }
+    );
       return res.status(200).json({
         success: true,
         message: "Login Successfully",
@@ -168,11 +168,9 @@ export const loginUser = async (req, res) => {
           username: isUser.username,
           email: isUser.email,
           accessToken
-
-          // refreshToken,
         },
       });
-    }
+    
   } catch (error) {
     return res.status(500).json({
       success: false,
