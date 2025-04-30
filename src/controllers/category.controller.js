@@ -26,10 +26,7 @@ export const createCategory = async (req, res) => {
         resource_type: "image",
       });
 
-      image = {
-        public_id: result.public_id,
-        url: result.secure_url,
-      };
+      image = result.secure_url
 
       await fs.remove(file.path); // remove from local disk
     }

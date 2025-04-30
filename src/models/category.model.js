@@ -46,7 +46,7 @@ const categorySchema = new mongoose.Schema(
       }
     ],
     featuredImage:{
-      type:String,
+      type:String
     }
 
   },
