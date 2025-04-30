@@ -8,11 +8,12 @@ import {
   previewCategory,
 } from "../controllers/category.controller.js";
 import { verifyToken } from "../middlewares/auth.middleware.js";
+import { upload } from "../config/multerFileUoloader.js";
 
 export const categoryRouter = express.Router();
 
 // create category
-categoryRouter.post("/category/new", verifyToken, createCategory);
+categoryRouter.post("/category/new",upload.single('image'), verifyToken, createCategory);
 
 // get public category
 categoryRouter.get("/categories", getCategories);

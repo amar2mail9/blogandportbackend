@@ -45,11 +45,9 @@ const categorySchema = new mongoose.Schema(
         ref: 'Blog'
       }
     ],
-    featuredImage: [
-      {
-        type: String, // cloudinary
-      },
-    ],
+    featuredImage:{
+      type:String,
+    }
 
   },
   { timestamps: true }

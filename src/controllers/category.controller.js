@@ -5,24 +5,34 @@ import { UserModels } from "../models/user.models.js";
 export const createCategory = async (req, res) => {
   try {
     const { categoryName, description, slug, isPublished } = req.body;
+    const file = req.file;
 
     if (!categoryName) {
-      return res.status(400).json({
-        success: false,
-        error: "Category name is required",
-      });
+      return res.status(400).json({ success: false, error: "Category name is required" });
     }
 
     const isCategory = await categoryModel.findOne({ categoryName });
-
     if (isCategory) {
-      return res.status(409).json({
-        success: false,
-        error: "Category name already exists",
-      });
+      return res.status(409).json({ success: false, error: "Category name already exists" });
     }
 
     const author = await UserModels.findById(req.user.id);
+
+    let image = null;
+
+    if (file) {
+      const result = await cloudinary.uploader.upload(file.path, {
+        folder: "categories",
+        resource_type: "image",
+      });
+
+      image = {
+        public_id: result.public_id,
+        url: result.secure_url,
+      };
+
+      await fs.remove(file.path); // remove from local disk
+    }
 
     const newCategory = new categoryModel({
       categoryName,
@@ -30,28 +40,27 @@ export const createCategory = async (req, res) => {
       description: description || "No Description",
       isPublished,
       status: isPublished ? "public" : "private",
+      image, // save cloudinary info
       author: {
         _id: author._id,
         email: author.email,
         username: author.username,
         fullname: author.fullname,
-      }
+      },
     });
 
     await newCategory.save();
-    // Push category ID to user's categories array
-    await UserModels.findByIdAndUpdate(
-      req.user.id,
-      { $push: { categories: newCategory._id } },
-      { new: true }
-    );
+
+    await UserModels.findByIdAndUpdate(req.user.id, {
+      $push: { categories: newCategory._id },
+    });
 
     return res.status(201).json({
       success: true,
       message: "Category created successfully",
       category: newCategory,
-
     });
+
   } catch (error) {
     console.error("Error creating category:", error);
     return res.status(500).json({
@@ -61,7 +70,6 @@ export const createCategory = async (req, res) => {
     });
   }
 };
-
 
 // get Public category
 export const getCategories = async (req, res) => {
