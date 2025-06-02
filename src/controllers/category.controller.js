@@ -32,13 +32,13 @@ export const createCategory = async (req, res) => {
     }
 
     const author = await UserModels.findById(req.user.id);
-
+    let typeStatus = isPublished ? "private" : "public";
     const newCategory = new categoryModel({
       categoryName,
       slug: slug || categoryName.toLowerCase().replace(/\s+/g, "-"),
       description: description || "No Description",
       isPublished,
-      status: isPublished ? "public" : "private",
+
       featuredImage: uploadResult.secure_url,
       author: {
         _id: author._id,
@@ -84,7 +84,7 @@ export const getCategories = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      count: categories.length,
+      count: categories.length || 0,
       categories,
     });
   } catch (error) {
@@ -110,7 +110,7 @@ export const getAllCategories = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      count: categories.length,
+      count: categories.length || 0,
       categories,
     });
   } catch (error) {

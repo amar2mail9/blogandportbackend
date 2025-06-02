@@ -16,24 +16,16 @@ const categorySchema = new mongoose.Schema(
       type: String,
     },
 
-
     isPublished: {
       type: Boolean,
       default: true,
     },
 
-    status: {
-      type: String,
-      enum: ['public', "private"],
-      default: "public"
-    },
-
-
     author: {
       _id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        required: true
+        required: true,
       },
       username: String,
       email: String,
@@ -42,13 +34,12 @@ const categorySchema = new mongoose.Schema(
     blogs: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Blog'
-      }
+        ref: "Blog",
+      },
     ],
-    featuredImage:{
-      type:String
-    }
-
+    featuredImage: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

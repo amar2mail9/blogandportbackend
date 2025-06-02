@@ -16,12 +16,10 @@ const blogSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    thumbnail:
-    {
+    thumbnail: {
       type: String,
       required: true,
     },
-
 
     author: {
       _id: {
@@ -30,7 +28,7 @@ const blogSchema = new mongoose.Schema(
       },
       email: String,
       username: String,
-      fullname: String
+      fullname: String,
     },
     expert: {
       type: String,
@@ -58,13 +56,8 @@ const blogSchema = new mongoose.Schema(
       },
       categoryName: String,
 
-      slug:String
+      slug: String,
     },
-    status: {
-      type: String,
-      enum: ["public", "private"],
-      default: "public"
-    }
   },
   { timestamps: true }
 );
