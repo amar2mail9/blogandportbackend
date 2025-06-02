@@ -186,7 +186,8 @@ export const deleteUser = async (req, res) => {
     const { id } = req.params;
 
     const isUser = await UserModels.findById(id);
-    console.log(isUser);
+   
+
 
     if (!isUser) {
       return res.status(404).json({
@@ -214,7 +215,7 @@ export const deleteUser = async (req, res) => {
 export const getAllUser = async (req, res) => {
   try {
     const users = await UserModels.find();
-    console.log(users);
+  
   } catch (error) {
     return res.status(500).json({
       success: false,

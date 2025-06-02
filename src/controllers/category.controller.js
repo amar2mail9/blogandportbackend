@@ -2,7 +2,7 @@ import slugify from "slugify";
 import { categoryModel } from "../models/category.model.js";
 import { UserModels } from "../models/user.models.js";
 import { v2 as cloudinary } from "cloudinary";
-
+import fs from "fs";
 // create category
 export const createCategory = async (req, res) => {
   try {
@@ -16,14 +16,11 @@ export const createCategory = async (req, res) => {
       });
     }
     let uploadResult;
+    uploadResult = await cloudinary.uploader.upload(file?.path, {
+      public_id: `blog_thumbnails/${slugify(categoryName, { lower: true })}`,
+    });
 
-    if (file && file.path) {
-      uploadResult = await cloudinary.uploader.upload(file.path, {
-        public_id: `blog_thumbnails/${slugify(categoryName, { lower: true })}`,
-      });
-    }
-
-    console.log(uploadResult);
+    fs.promises.unlink(file.path);
 
     const isCategory = await categoryModel.findOne({ categoryName });
 
