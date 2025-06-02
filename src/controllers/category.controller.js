@@ -7,8 +7,7 @@ import { v2 as cloudinary } from "cloudinary";
 export const createCategory = async (req, res) => {
   try {
     const { categoryName, description, slug, isPublished } = req.body;
-const file  = req.file
-
+    const file = req.file;
 
     if (!categoryName) {
       return res.status(400).json({
@@ -16,13 +15,16 @@ const file  = req.file
         error: "Category name is required",
       });
     }
-if (file && file.path) {
-  uploadResult = await cloudinary.uploader.upload(file.path, {
-    public_id: `blog_thumbnails/${slugify(categoryName, { lower: true })}`,
-  });
-  console.log(uploadResult);
-  
-}
+    let uploadResult;
+
+    if (file && file.path) {
+      uploadResult = await cloudinary.uploader.upload(file.path, {
+        public_id: `blog_thumbnails/${slugify(categoryName, { lower: true })}`,
+      });
+    }
+
+    console.log(uploadResult);
+
     const isCategory = await categoryModel.findOne({ categoryName });
 
     if (isCategory) {
@@ -40,12 +42,13 @@ if (file && file.path) {
       description: description || "No Description",
       isPublished,
       status: isPublished ? "public" : "private",
+      featuredImage: uploadResult.secure_url,
       author: {
         _id: author._id,
         email: author.email,
         username: author.username,
         fullname: author.fullname,
-      }
+      },
     });
 
     await newCategory.save();
@@ -60,7 +63,6 @@ if (file && file.path) {
       success: true,
       message: "Category created successfully",
       category: newCategory,
-
     });
   } catch (error) {
     console.error("Error creating category:", error);
@@ -71,7 +73,6 @@ if (file && file.path) {
     });
   }
 };
-
 
 // get Public category
 export const getCategories = async (req, res) => {
@@ -88,12 +89,7 @@ export const getCategories = async (req, res) => {
       success: true,
       count: categories.length,
       categories,
-
     });
-
-
-
-
   } catch (error) {
     return res.status(500).json({
       success: false,
@@ -103,7 +99,7 @@ export const getCategories = async (req, res) => {
   }
 };
 
-// get all category 
+// get all category
 
 export const getAllCategories = async (req, res) => {
   try {
@@ -119,12 +115,7 @@ export const getAllCategories = async (req, res) => {
       success: true,
       count: categories.length,
       categories,
-
     });
-
-
-
-
   } catch (error) {
     return res.status(500).json({
       success: false,
@@ -133,7 +124,6 @@ export const getAllCategories = async (req, res) => {
     });
   }
 };
-
 
 // get singe category
 
@@ -147,8 +137,6 @@ export const previewCategory = async (req, res) => {
         error: "Slug is required",
       });
     }
-
-
 
     const category = await categoryModel.findOne(slug);
 
@@ -164,7 +152,6 @@ export const previewCategory = async (req, res) => {
       message: "Data fetched successfully",
       category,
     });
-
   } catch (error) {
     return res.status(500).json({
       success: false,
@@ -187,18 +174,13 @@ export const DeleteCategory = async (req, res) => {
       });
     }
 
-
-
     const category = await categoryModel.deleteOne({ _id: id });
-
-
 
     return res.status(200).json({
       success: true,
       message: "Deleted successfully",
       category,
     });
-
   } catch (error) {
     return res.status(500).json({
       success: false,
@@ -208,11 +190,10 @@ export const DeleteCategory = async (req, res) => {
   }
 };
 
-
 export const EditCategory = async (req, res) => {
   try {
     const id = req.params?.id.trim();
-    const { slug, categoryName, description, isPublished } = req.body
+    const { slug, categoryName, description, isPublished } = req.body;
 
     if (!id) {
       return res.status(400).json({
@@ -246,15 +227,11 @@ export const EditCategory = async (req, res) => {
       { new: true }
     );
 
-
-
-
     return res.status(200).json({
       success: true,
       message: "Changed successfully",
       category,
     });
-
   } catch (error) {
     return res.status(500).json({
       success: false,
