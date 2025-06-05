@@ -122,7 +122,7 @@ export const getAllCategories = async (req, res) => {
   }
 };
 
-// get singe category
+// get single category
 
 export const previewCategory = async (req, res) => {
   try {
@@ -135,7 +135,7 @@ export const previewCategory = async (req, res) => {
       });
     }
 
-    const category = await categoryModel.findOne(slug);
+    const category = await categoryModel.findOne({slug});
 
     if (!category) {
       return res.status(404).json({
