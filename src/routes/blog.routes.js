@@ -10,7 +10,7 @@ export const blogRoute = express.Router();
 blogRoute.post('/blog/new', upload.single("thumbnail"), verifyToken, createBlog);
 blogRoute.get('/blogs', getPublicBlog);
 
-blogRoute.get('/blog/all',verifyToken,allBlogs)
+blogRoute.get('/blogs/all',verifyToken,allBlogs)
 blogRoute.get('/blogs/:category',verifyToken,categoryWiseBlog)
 blogRoute.get('/blog/:slug',detailsBlog)
 blogRoute.delete('/blog/:id',deleteBlog)
