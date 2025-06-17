@@ -17,7 +17,7 @@ export const createBlog = async (req, res) => {
       tags,
       expert,
     } = req.body;
-    console.log(category);
+
 
     const file = req.file;
 
@@ -60,7 +60,7 @@ export const createBlog = async (req, res) => {
       slug: category,
     });
 
-    console.log(findCategory);
+   
 
     const author = await UserModels.findById(req.user.id);
     if (!author) {
@@ -100,7 +100,7 @@ export const createBlog = async (req, res) => {
     if (findCategory) {
       findCategory.blogs.push(newBlog._id);
       await findCategory.save();
-      console.log(findCategory);
+        
     }
 
     // Push blog to author's list
